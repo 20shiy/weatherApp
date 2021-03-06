@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+
 import './App.css';
+import React, { useState } from 'react'
+import {fetchWeather} from './component/weather'
 
 function App() {
+
+  const [query, setQuery] = useState('')
+  const [weather, setWeather] = useState({})
+
+  const search = async(e) => {
+    if(e.key === 'Enter') {
+      const data = await fetchWeather(query)
+      setWeather(data)
+      setQuery('')
+    }
+  }
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} onKeyPress={search} />
+      {weather.main && (
+        <div>
+          <h2>
+            {weather.name},
+            {weather.sys.country}
+            
+          </h2>
+          <p>
+          {weather.main.temp}&deg;C
+          </p>
+        </div>
+      )
+      }
+      
     </div>
   );
 }
